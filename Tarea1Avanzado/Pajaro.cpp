@@ -1,7 +1,7 @@
 #include "Header.h"
 
 void dibujarRectangulo(vector3d vertices[], vector3d color);
-
+void dibujarRectanguloSinColor(vector3d vertices[]);
 
 void Pajaro::dibujar() {
 	
@@ -131,6 +131,17 @@ void dibujarRectangulo(vector3d vertices[], vector3d color) {
 	glPopMatrix();
 }
 
+void dibujarRectanguloSinColor(vector3d vertices[]) {
+	glPushMatrix();
+	glBegin(GL_POLYGON);
+	glVertex3f(vertices[0].x, vertices[0].y, vertices[0].z);
+	glVertex3f(vertices[1].x, vertices[1].y, vertices[1].z);
+	glVertex3f(vertices[2].x, vertices[2].y, vertices[2].z);
+	glVertex3f(vertices[3].x, vertices[3].y, vertices[3].z);
+	glEnd();
+	glPopMatrix();
+}
+
 void MotorPajaro::moverEnTiempo() {
 	float deltaAlas = 1.5;
 	float deltaAnguloRotacion = 1.5;
@@ -154,4 +165,130 @@ void MotorPajaro::dibujar() {
 	glTranslatef(0.0, 0.0, -radioCircunferencia);
 	pajaro.dibujar();
 	glPopMatrix();
+}
+
+void MotorPajaro::dibujarTrasladado(double x, double y, double z) {
+	glPushMatrix();
+	glTranslatef(x, y, z);
+	this->dibujar();
+	glPopMatrix();
+}
+
+void MotorPajaro::dibujarTrasladadoSinColor(double x, double y, double z) {
+	glPushMatrix();
+	glTranslatef(x, y, z);
+	this->dibujarSinColor();
+	glPopMatrix();
+}
+
+void MotorPajaro::dibujarSinColor() {
+	glPushMatrix();
+	glRotatef(-anguloCircunferencia, 0.0, 1.0, 0.0);
+	glTranslatef(0.0, 0.0, -radioCircunferencia);
+	pajaro.dibujarSinColor();
+	glPopMatrix();
+}
+
+void Pajaro::dibujarSinColor() {
+
+	/*Dibujo cuerpo*/
+	dibujarRectanguloSinColor(
+		new vector3d[4]{
+			{2,1,-1},
+			{2,1,1},
+			{-2,1,1},
+			{-2,1,-1}
+		}
+	);
+	dibujarRectanguloSinColor(
+		new vector3d[4]{
+			{-2,-1,-1},
+			{-2,-1,1},
+			{2,-1,1},
+			{2,-1,-1}
+		}
+	);
+	dibujarRectanguloSinColor(
+		new vector3d[4]{
+			{-2,1,+1},
+			{2,1,1},
+			{2,-1,1},
+			{-2,-1,1}
+		}
+	);
+	dibujarRectanguloSinColor(
+		new vector3d[4]{
+			{2,1,-1},
+			{-2,1,-1},
+			{-2,-1,-1},
+			{2,-1,-1}
+		}
+	);
+	dibujarRectanguloSinColor(
+		new vector3d[4]{
+			{2,1,1},
+			{2,1,-1},
+			{2,-1,-1},
+			{2,-1,1}
+		}
+	);
+	dibujarRectanguloSinColor(
+		new vector3d[4]{
+			{-2,1,-1},
+			{-2,1,1},
+			{-2,-1,1},
+			{-2,-1,-1}
+		}
+	);
+
+
+
+	//Dibujo Cabeza
+	glPushMatrix();
+	glTranslated(3, 0, 0);
+	glutSolidSphere(1, 10000, 10000);
+	glPopMatrix();
+
+	//Dibujo Ojos
+	glPushMatrix();
+	glTranslated(3.8, 0.5, 0.6);
+	glutSolidSphere(0.18, 10000, 10000);
+	glPopMatrix();
+	glPushMatrix();
+	glTranslated(3.8, 0.5, -0.6);
+	glutSolidSphere(0.18, 10000, 10000);
+	glPopMatrix();
+
+	//Dibujo Pico
+	glPushMatrix();
+	glRotatef(90, 0.0, 1.0, 0.0);
+	glTranslatef(0.0, 0.0, 3.9);
+	glutSolidCone(0.4, 0.7, 500, 500);
+	glPopMatrix();
+
+
+	//Dibujo Alas
+	glPolygonMode(GL_BACK, GL_FILL);
+	glPushMatrix();
+	glRotatef(-anguloAlas, 1.0, 0.0, 0.0);
+	glTranslatef(0.0, 0.0, 1.0);
+	glBegin(GL_POLYGON);
+	glVertex3f(-1.0, 0.0, 0.0);
+	glVertex3f(1.0, 0.0, 0.0);
+	glVertex3f(-0.3, 0.0, 3.5);
+	glEnd();
+	glPopMatrix();
+
+	glPushMatrix();
+	glRotatef(anguloAlas, 1.0, 0.0, 0.0);
+	glTranslatef(0.0, 0.0, -1.0);
+	glBegin(GL_POLYGON);
+	glVertex3f(-0.3, 0.0, -3.5);
+	glVertex3f(1.0, 0.0, 0.0);
+	glVertex3f(-1.0, 0.0, 0.0);
+
+	glEnd();
+	glPopMatrix();
+	glPolygonMode(GL_BACK, GL_LINE);
+
 }

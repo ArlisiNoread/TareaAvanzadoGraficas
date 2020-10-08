@@ -75,6 +75,7 @@ public:
 		posicion = pos;
 	};
 	void dibujar();
+	void dibujarSinColor();
 };
 
 class MotorPajaro
@@ -89,6 +90,9 @@ public:
 	};
 	void moverEnTiempo();
 	void dibujar();
+	void dibujarTrasladado(double x, double y, double z);
+	void dibujarTrasladadoSinColor(double x, double y, double z);
+	void dibujarSinColor();
 };
 
 void iniciarProcesoGlut(int, char**);
@@ -115,3 +119,14 @@ void dibujarCuadrado(
 void dibujaLampara();
 void gltMakeShadowMatrix(GLfloat vPlaneEquation[], GLfloat vLightPos[], GLfloat destMat[]);
 void SombraDeMiMundo();
+void dibujaObjetos();
+void dibujarCuboSinColor();
+void dibujarCuadradoSinColor(
+	GLfloat transX,
+	GLfloat transY,
+	GLfloat transZ,
+	GLfloat rotAngle,
+	GLfloat rotX,
+	GLfloat rotY,
+	GLfloat rotZ
+);

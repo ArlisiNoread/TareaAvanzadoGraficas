@@ -2,8 +2,8 @@
 
 
 Camara camara(
-    vector3d(5.0f, 2.0f, 5.0f), //vector3d(15.0f, 5.0f, 15.0f),
-    vector3d(2.0f, 2.0f, 2.0f), //vector3d(14.0f, 5.0f, 14.0f),
+    vector3d(35.0f, 5.0f, 35.0f), //vector3d(15.0f, 5.0f, 15.0f),
+    vector3d(34.0f, 5.0f, 34.0f), //vector3d(14.0f, 5.0f, 14.0f),
     vector3d(0.0f, 1.0f, 0.0f)
 );
 
@@ -41,13 +41,8 @@ void iniciarProcesoGlut(int argc, char** argv) {
 void SetupRC()
 {
     // Black background
-    glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+    glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
 
-    // Set drawing color to green
-    //glColor3f(0.0f, 1.0f, 0.0f);
-
-    // Set color shading model to flat
-    //glShadeModel(shademode);
 
     glEnable(GL_DEPTH_TEST);
     //glEnable(GL_CULL_FACE);
@@ -60,12 +55,14 @@ void SetupRC()
     // because we are using triangle fans
     glFrontFace(GL_CW);
 
-    glShadeModel(GL_FLAT);
+    glShadeModel(GL_SMOOTH);
+    //glShadeModel(GL_FLAT);
 
+    //glEnable(GL_BLEND);
+    //glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-  
-
-
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    glEnable(GL_BLEND);
     
 }
 
@@ -74,16 +71,34 @@ void RenderScene(void) {
     glLoadIdentity();
     camara.ActualizaCamaraConGlut();
     dibujaLampara();
+    creaParedesTechoPiso();
     dibujaGrid();
-    //pajaro.dibujar();
-    motorPajaro.dibujar();
-    //creaParedesTechoPiso();
     SombraDeMiMundo();
-    dibujarCubo();
+    dibujaObjetos();
 
-
+    /*
+    //Reflejo
+    glPushMatrix();
+    //glRotatef(180, 0, 1, 0);
+    //glRotatef(180, 1,0,0);
+    glTranslatef(0,-10,0);
+    dibujaObjetos();
+    glPopMatrix();
+    //Termina reflejo
+    */
     glutSwapBuffers();
     glFlush();
+}
+
+void dibujaObjetos() {
+    dibujarCubo();
+    motorPajaro.dibujarTrasladado(15, 5, 15);
+}
+
+void dibujaObjetosSinColor() {
+    dibujarCuboSinColor();
+    motorPajaro.dibujarTrasladadoSinColor(15, 5, 15);
+
 }
 
 void ChangeSize(GLsizei w, GLsizei h) {
@@ -194,8 +209,8 @@ void NormalKeys(unsigned char key, int xmouse, int ymouse) {
 
 void dibujaLampara() {
     glPushMatrix();
-    glColor3f(1, 1, 1);
-    glTranslated(15, 13, 15);
+    glColor4f(0.95, 0.98, 0.98, 1.0);
+    glTranslatef(15, 13, 15);
     glutSolidSphere(1, 50, 50);
     glPopMatrix();
 
@@ -227,8 +242,9 @@ void creaParedesTechoPiso() {
     glPopMatrix();
 
     /*Crea Piso sobre Plano XK*/
+    glEnable(GL_BLEND);
     glPushMatrix();
-    glColor3f(1, 0, 0.5);
+    glColor4f(0.8f, 0.4f, 0.4f, 0.9f);
     glBegin(GL_POLYGON);
     glVertex3f(0, 0, 0);
     glVertex3f(30, 0, 0);
@@ -236,6 +252,8 @@ void creaParedesTechoPiso() {
     glVertex3f(0, 0, 30);
     glEnd();
     glPopMatrix();
+    glDisable(GL_BLEND);
+
 
     /*Crea Techo sobre Plano XK en Y = 15*/
     glPushMatrix();
@@ -265,7 +283,7 @@ void dibujaGrid() {
 void dibujarCubo() {
     glPushMatrix();
 
-    glTranslatef(5.0,5.0,5.0);
+    glTranslatef(15.0,5.0,15.0);
 
     dibujarCuadrado(
         0, 0, 0.5,
@@ -319,7 +337,7 @@ void dibujarCuadrado(
     GLfloat colB
 ) {
     glPushMatrix();
-    glColor3f(colR, colG, colB);
+    glColor4f(colR, colG, colB, 1.0);
     glTranslatef(transX, transY, transZ);
     glRotatef(rotAngle, rotX, rotY, rotZ);
     glBegin(GL_POLYGON);
@@ -329,6 +347,73 @@ void dibujarCuadrado(
         { 0.5, 0.5, 0 },
         { 0.5, -0.5, 0 },
         { -0.5, -0.5, 0 } 
+    };
+
+    for (int i = 0; i < 4; i++) {
+        glVertex3f(vertices[i][0], vertices[i][1], vertices[i][2]);
+    }
+    glEnd();
+    glPopMatrix();
+}
+
+
+void dibujarCuboSinColor() {
+    glPushMatrix();
+
+    glTranslatef(15.0, 5.0, 15.0);
+
+    dibujarCuadradoSinColor(
+        0, 0, 0.5,
+        0, 0, 0, 0
+    );
+
+    dibujarCuadradoSinColor(
+        0, 0, -0.5,
+        180, 0, 1, 0
+    );
+
+    dibujarCuadradoSinColor(
+        0.5, 0, 0,
+        90, 0, 1, 0
+    );
+
+    dibujarCuadradoSinColor(
+        -0.5, 0, 0,
+        -90, 0, 1, 0
+    );
+
+    dibujarCuadradoSinColor(
+        0, 0.5, 0,
+        -90, 1, 0, 0
+    );
+
+    dibujarCuadradoSinColor(
+        0, -0.5, 0,
+        90, 1, 0, 0
+    );
+
+    glPopMatrix();
+}
+
+void dibujarCuadradoSinColor(
+    GLfloat transX,
+    GLfloat transY,
+    GLfloat transZ,
+    GLfloat rotAngle,
+    GLfloat rotX,
+    GLfloat rotY,
+    GLfloat rotZ
+) {
+    glPushMatrix();
+    glTranslatef(transX, transY, transZ);
+    glRotatef(rotAngle, rotX, rotY, rotZ);
+    glBegin(GL_POLYGON);
+
+    GLfloat vertices[][3] = {
+        { -0.5, 0.5, 0},
+        { 0.5, 0.5, 0 },
+        { 0.5, -0.5, 0 },
+        { -0.5, -0.5, 0 }
     };
 
     for (int i = 0; i < 4; i++) {
@@ -369,19 +454,19 @@ void gltMakeShadowMatrix(GLfloat vPlaneEquation[], GLfloat vLightPos[], GLfloat 
 
 
 void SombraDeMiMundo() {
-    glPushMatrix();
+    glDisable(GL_DEPTH_TEST);
 
-    GLfloat coordPlano[4] = {0.0, 0.0, 1.0, 1};
-    GLfloat coordLuz[] = {15.0, 13 ,15.0, -10};
+    glPushMatrix();
+    glColor4f(0.3,0.3,0.3,0.9);
+    GLfloat coordPlano[4] = {0.0, 1.0, 0.0, 0.0};
+    GLfloat coordLuz[] = {15.0, 13 ,15.0, 1.0};
     GLfloat matrizSombra[16];
 
     gltMakeShadowMatrix(coordPlano, coordLuz, matrizSombra);
     glMultMatrixf(matrizSombra);
-    dibujarCuadrado(
-        0, -0.5, 0,
-        90, 1, 0, 0,
-        0, 0, 0
-    );
-    
+    dibujaObjetosSinColor();
     glPopMatrix();
+
+    glEnable(GL_DEPTH_TEST);
 }
+

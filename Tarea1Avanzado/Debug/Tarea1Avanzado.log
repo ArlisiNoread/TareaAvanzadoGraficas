@@ -1,6 +1,3 @@
-﻿  Camara.cpp
-  Pajaro.cpp
-  Source.cpp
-C:\Users\pinam\source\repos\Tarea1Avanzado\Tarea1Avanzado\Source.cpp(104,17): warning C4101: 'dy': variable local sin referencia
-  Generando código...
+﻿  Source.cpp
+C:\Users\pinam\source\repos\Tarea1Avanzado\Tarea1Avanzado\Source.cpp(119,17): warning C4101: 'dy': variable local sin referencia
   Tarea1Avanzado.vcxproj -> C:\Users\pinam\source\repos\Tarea1Avanzado\Debug\Tarea1Avanzado.exe
